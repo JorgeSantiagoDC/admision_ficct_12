@@ -37,12 +37,12 @@ return [
     |
     */
 
-    'guards' => [
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'users',
-        ],
-    ],
+    //'guards' => [
+        //'web' => [
+          //  'driver' => 'session',
+        //    'provider' => 'users',
+      //  ],
+    //],
 
     /*
     |--------------------------------------------------------------------------
@@ -61,17 +61,31 @@ return [
     |
     */
 
-    'providers' => [
-        'users' => [
-            'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', User::class),
+    'guards' => [
+        'web' => [
+            'driver'   => 'session',
+            'provider' => 'usuarios',
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
+
+    'providers' => [
+        'usuarios' => [
+            'driver' => 'eloquent',
+            'model'  => App\Models\Usuario::class,
+        ],
+    ],
+
+    //'providers' => [
+      //  'users' => [
+        //    'driver' => 'eloquent',
+          //  'model' => env('AUTH_MODEL', User::class),
+        //],
+
+                            // 'users' => [
+                            //     'driver' => 'database',
+                            //     'table' => 'users',
+                            // ],
+    //],
 
     /*
     |--------------------------------------------------------------------------

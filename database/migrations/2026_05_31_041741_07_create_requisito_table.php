@@ -6,19 +6,24 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        //
+        Schema::create('requisito', function (Blueprint $table) {
+            $table->increments('id_requisito');
+            $table->unsignedInteger('id_postulante');
+            $table->string('tipo_documento', 50)->notNull();
+            $table->text('url_archivo')->notNull();
+            $table->string('estado_validacion', 20)->default('Pendiente');
+
+            $table->foreign('id_postulante')
+                  ->references('id_postulante')
+                  ->on('postulante')
+                  ->onDelete('cascade');
+        });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('requisito');
     }
 };

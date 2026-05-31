@@ -6,19 +6,24 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        //
+        Schema::create('usuario', function (Blueprint $table) {
+            $table->increments('id_usuario');
+            $table->unsignedInteger('id_rol');
+            $table->string('usuario', 100)->unique()->notNull();
+            $table->string('password', 255)->notNull();
+            $table->boolean('activo')->default(true);
+
+            $table->foreign('id_rol')
+                  ->references('id_rol')
+                  ->on('rol')
+                  ->onDelete('restrict');
+        });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('usuario');
     }
 };

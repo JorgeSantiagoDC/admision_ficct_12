@@ -6,19 +6,19 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        //
+        Schema::create('carrera', function (Blueprint $table) {
+            $table->increments('id_carrera');
+            $table->string('nombre', 100)->unique()->notNull();
+            $table->integer('cupo_maximo')->notNull();
+
+            $table->check('cupo_maximo > 0');
+        });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('carrera');
     }
 };

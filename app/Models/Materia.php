@@ -6,5 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Materia extends Model
 {
-    //
+    protected $table      = 'materia';
+    protected $primaryKey = 'id_materia';
+    public    $timestamps = false;
+
+    protected $fillable = [
+        'nombre',
+    ];
+
+    // Una materia tiene muchos grupos
+    public function grupos()
+    {
+        return $this->hasMany(Grupo::class, 'id_materia', 'id_materia');
+    }
 }
