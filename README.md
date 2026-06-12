@@ -1,69 +1,300 @@
-main (producción - Railway)
-└── develop (integración)
-    ├── feature/jorgesantiago
-    └── feature/diegoalejandro
+# 🎓 Sistema de Admisión FICCT
 
+Sistema web para la gestión del proceso de admisión de la **Facultad de Ingeniería en Ciencias de la Computación y Telecomunicaciones (FICCT)** de la Universidad Autónoma Gabriel René Moreno (UAGRM).
 
-<<<<<<< HEAD
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+---
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## 🛠️ Stack Tecnológico
 
-## About Laravel
+| Tecnología | Versión |
+|-----------|---------|
+| PHP | 8.x |
+| Laravel | 12.x |
+| PostgreSQL | 18.x |
+| Bootstrap | 5.3 |
+| Railway | Producción |
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 📋 Requisitos del entorno local
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- PHP 8.x con extensiones: `pdo_pgsql`, `pgsql`, `mbstring`, `xml`, `intl`
+- Composer
+- PostgreSQL 15+
+- Git
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## ⚙️ Instalación local
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 1. Clona el repositorio
 
-## Laravel Sponsors
+```bash
+git clone https://github.com/JorgeSantiagoDC/admision_ficct_12.git
+cd admision_ficct_12
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 2. Instala dependencias
 
-### Premium Partners
+```bash
+composer install
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### 3. Configura el entorno
 
-## Contributing
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Edita el archivo `.env` con tus datos locales:
 
-## Code of Conduct
+```env
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=admision_ficct_db
+DB_USERNAME=postgres
+DB_PASSWORD=tu_password
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+SESSION_DRIVER=file
+CACHE_STORE=file
+QUEUE_CONNECTION=sync
+```
 
-## Security Vulnerabilities
+### 4. Crea la base de datos en PostgreSQL
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```sql
+CREATE DATABASE admision_ficct_db OWNER postgres;
+```
 
-## License
+### 5. Ejecuta las migraciones y seeders
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-=======
-# admision_ficct_12
->>>>>>> ade5be2bce76282b716e8ca041ff3b59d35ebeb9
+```bash
+php artisan migrate --seed
+```
+
+### 6. Inicia el servidor local
+
+```bash
+php artisan serve
+```
+
+Accede en: `http://localhost:8000`
+
+---
+
+## 👤 Usuarios de prueba
+
+| Usuario | Contraseña | Rol |
+|---------|-----------|-----|
+| `admin_ficct` | `admin123` | Administrador |
+| `docente_ficct` | `docente123` | Docente |
+| `postulante_ficct` | `postulante123` | Postulante |
+
+---
+
+## 🗄️ Estructura de la Base de Datos
+
+El sistema cuenta con **12 tablas en Tercera Forma Normal (3FN)**:
+
+```
+rol
+└── usuario
+    ├── docente
+    │   └── grupo
+    │       ├── examen
+    │       │   └── nota
+    │       └── inscripcion_grupo
+    └── postulante
+        ├── requisito
+        ├── pago
+        ├── inscripcion_grupo
+        └── nota
+carrera (referenciada por postulante)
+materia (referenciada por grupo)
+```
+
+### Reglas de negocio implementadas (Triggers PostgreSQL)
+
+| # | Trigger | Descripción |
+|---|---------|-------------|
+| 1 | `tg_pago_aprobado` | Pago completado → estado_admision = 'En Proceso' |
+| 2 | `tg_validar_opciones_carrera` | Opción 1 ≠ Opción 2 de carrera |
+| 3 | `tg_validar_edad_postulante` | Edad mínima 16 años |
+| 4 | `tg_capacidad_grupo` | Máximo 70 estudiantes por grupo |
+| 5 | `tg_validar_nota` | Calificación entre 0 y 100 |
+| 6 | `tg_verificar_cupo_carrera` | Respeta cupo máximo por carrera |
+| 7 | `tg_recalcular_promedio` | Recalcula promedio final automáticamente |
+| 8 | `tg_correo_postulante` | Correo único por postulante |
+| 9 | `tg_limite_grupos_docente` | Máximo 4 grupos por docente por gestión |
+| 10 | `tg_estado_admision_automatico` | Aprobado si promedio ≥ 60, Reprobado si < 60 |
+
+---
+
+## 🚀 Despliegue en Railway
+
+El proyecto está desplegado en **Railway** con PostgreSQL como base de datos en la nube.
+
+### Variables de entorno requeridas en Railway
+
+```env
+APP_NAME=Admision FICCT
+APP_ENV=production
+APP_KEY=tu_app_key
+APP_DEBUG=false
+APP_URL=https://tu-dominio.railway.app
+
+DB_CONNECTION=pgsql
+DB_HOST=postgres.railway.internal
+DB_PORT=5432
+DB_DATABASE=railway
+DB_USERNAME=postgres
+DB_PASSWORD=tu_password_railway
+
+SESSION_DRIVER=file
+CACHE_STORE=file
+QUEUE_CONNECTION=sync
+```
+
+---
+
+## 🌿 Flujo de trabajo con Git
+
+### Estructura de ramas
+
+```
+main              ← Producción
+└── develop       ← Integración (Railway despliega desde aquí)
+    ├── jorgesantiago    ← Rama de Jorge Santiago
+    └── diegoalejandro   ← Rama de Diego Alejandro
+```
+
+### Flujo diario de desarrollo
+
+```bash
+# 1. Actualiza tu rama con los últimos cambios
+git checkout develop
+git pull origin develop
+git checkout jorgesantiago   # o diegoalejandro
+git merge develop
+
+# 2. Trabaja y guarda cambios
+git add .
+git commit -m "feat: descripcion del cambio"
+git push origin jorgesantiago
+
+# 3. Cuando terminas un caso de uso
+# → Crea un Pull Request en GitHub: tu-rama → develop
+```
+
+### Convención de commits
+
+| Prefijo | Uso |
+|---------|-----|
+| `feat:` | Nueva funcionalidad |
+| `fix:` | Corrección de error |
+| `chore:` | Tareas de mantenimiento |
+| `docs:` | Documentación |
+| `refactor:` | Refactorización de código |
+
+---
+
+## 📁 Estructura del proyecto
+
+```
+admision_ficct_12/
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   │   └── Auth/
+│   │   │       └── LoginController.php
+│   │   └── Middleware/
+│   │       └── CheckRole.php
+│   └── Models/
+│       ├── Rol.php
+│       ├── Usuario.php
+│       ├── Carrera.php
+│       ├── Materia.php
+│       ├── Docente.php
+│       ├── Postulante.php
+│       ├── Requisito.php
+│       ├── Pago.php
+│       ├── Grupo.php
+│       ├── InscripcionGrupo.php
+│       ├── Examen.php
+│       └── Nota.php
+├── database/
+│   ├── migrations/
+│   │   ├── 2026_01_01_000001_01_create_rol_table.php
+│   │   ├── 2026_01_01_000002_02_create_usuario_table.php
+│   │   ├── 2026_01_01_000003_03_create_carrera_table.php
+│   │   ├── 2026_01_01_000004_04_create_materia_table.php
+│   │   ├── 2026_01_01_000005_05_create_docente_table.php
+│   │   ├── 2026_01_01_000006_06_create_postulante_table.php
+│   │   ├── 2026_01_01_000007_07_create_requisito_table.php
+│   │   ├── 2026_01_01_000008_08_create_pago_table.php
+│   │   ├── 2026_01_01_000009_09_create_grupo_table.php
+│   │   ├── 2026_01_01_000010_10_create_inscripcion_grupo_table.php
+│   │   ├── 2026_01_01_000011_11_create_examen_table.php
+│   │   ├── 2026_01_01_000012_12_create_nota_table.php
+│   │   └── 2026_01_01_000013_13_create_triggers_admision.php
+│   └── seeders/
+│       ├── DatabaseSeeder.php
+│       └── UsuarioSeeder.php
+├── resources/
+│   └── views/
+│       ├── layouts/
+│       │   └── app.blade.php
+│       ├── auth/
+│       │   └── login.blade.php
+│       ├── admin/
+│       │   └── dashboard.blade.php
+│       ├── docente/
+│       │   └── dashboard.blade.php
+│       └── postulante/
+│           └── dashboard.blade.php
+├── routes/
+│   └── web.php
+├── nixpacks.toml
+└── README.md
+```
+
+---
+
+## 👥 Equipo de desarrollo
+
+| Nombre | Rama | Rol |
+|--------|------|-----|
+| Jorge Santiago | `jorgesantiago` | Desarrollador |
+| Diego Alejandro | `diegoalejandro` | Desarrollador |
+
+---
+
+## 📚 Metodología
+
+Este proyecto sigue la metodología **PUDS (Proceso Unificado de Desarrollo de Software)**, organizado en ciclos de desarrollo con casos de uso priorizados.
+
+### Ciclo #1 — 15 Casos de Uso
+
+| CU | Nombre | Estado |
+|----|--------|--------|
+| CU1 | Iniciar Sesión | ✅ Implementado |
+| CU2 | Cerrar Sesión | ✅ Implementado |
+| CU3 | Gestionar Postulantes | ⏳ Pendiente |
+| CU4 | Subir Requisitos Documentales | ⏳ Pendiente |
+| CU5 | Validar Requisitos Documentales | ⏳ Pendiente |
+| CU6 | Consultar Estado de Inscripción | ⏳ Pendiente |
+| CU7 | Registrar Preferencia de Carrera | ⏳ Pendiente |
+| CU8 | Registrar Pago de Inscripción | ⏳ Pendiente |
+| CU9 | Validar Pago | ⏳ Pendiente |
+| CU10 | Gestionar Materias de Admisión | ⏳ Pendiente |
+| CU11 | Administrar Gestiones Académicas | ⏳ Pendiente |
+| CU12 | Gestionar Docentes | ⏳ Pendiente |
+| CU13 | Calcular Cantidad de Grupos | ⏳ Pendiente |
+| CU14 | Crear Grupos Académicos | ⏳ Pendiente |
+| CU15 | Asignar Docente a Grupo | ⏳ Pendiente |
+
+---
+
+*UAGRM — FICCT © 2026*
