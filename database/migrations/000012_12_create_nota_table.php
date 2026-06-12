@@ -17,8 +17,15 @@ return new class extends Migration
 
             $table->unique(['id_examen', 'id_postulante']);
 
-            $table->foreign('id_examen')->references('id_examen')->on('examen')->onDelete('cascade');
-            $table->foreign('id_postulante')->references('id_postulante')->on('postulante')->onDelete('cascade');
+            $table->foreign('id_examen')
+                  ->references('id_examen')
+                  ->on('examen')
+                  ->onDelete('cascade');
+
+            $table->foreign('id_postulante')
+                  ->references('id_postulante')
+                  ->on('postulante')
+                  ->onDelete('cascade');
         });
 
         DB::statement('ALTER TABLE nota ADD CONSTRAINT chk_calificacion CHECK (calificacion >= 0.00 AND calificacion <= 100.00)');

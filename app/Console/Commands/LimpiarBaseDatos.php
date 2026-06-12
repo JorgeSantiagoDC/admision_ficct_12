@@ -3,28 +3,22 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class LimpiarBaseDatos extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'app:limpiar-base-datos';
+    protected $signature   = 'db:limpiar';
+    protected $description = 'Limpia completamente el schema public de PostgreSQL';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Command description';
-
-    /**
-     * Execute the console command.
-     */
-    public function handle()
+    public function handle(): void
     {
-        //
+        $this->info('Limpiando base de datos...');
+
+        DB::statement('DROP SCHEMA public CASCADE');
+        DB::statement('CREATE SCHEMA public');
+        DB::statement('GRANT ALL ON SCHEMA public TO postgres');
+        DB::statement('GRANT ALL ON SCHEMA public TO public');
+
+        $this->info('Base de datos limpiada correctamente.');
     }
 }

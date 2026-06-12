@@ -17,8 +17,15 @@ return new class extends Migration
             $table->integer('capacidad_maxima')->default(70);
             $table->string('gestion', 10)->notNull();
 
-            $table->foreign('id_materia')->references('id_materia')->on('materia')->onDelete('restrict');
-            $table->foreign('id_docente')->references('id_docente')->on('docente')->onDelete('restrict');
+            $table->foreign('id_materia')
+                  ->references('id_materia')
+                  ->on('materia')
+                  ->onDelete('restrict');
+
+            $table->foreign('id_docente')
+                  ->references('id_docente')
+                  ->on('docente')
+                  ->onDelete('restrict');
         });
 
         DB::statement('ALTER TABLE grupo ADD CONSTRAINT chk_capacidad_maxima CHECK (capacidad_maxima <= 70)');
