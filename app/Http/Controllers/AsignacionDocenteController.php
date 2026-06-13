@@ -18,6 +18,7 @@ class AsignacionDocenteController extends Controller
     public function index()
     {
         $grupos = Grupo::with(['docente.usuario', 'materia'])
+            ->orderBy('nombre_grupo') 
             ->orderBy('nombre')
             ->paginate(15);
 
@@ -82,7 +83,7 @@ class AsignacionDocenteController extends Controller
         return redirect()->route('admin.grupos.index')
         ->with('success',
             "Docente {$docente->nombres} {$docente->apellido_paterno} " .
-            "asignado correctamente al grupo {$grupo->nombre}."
+            "asignado correctamente al grupo {$grupo->nombre_grupo}."
         );
     }
 
@@ -91,9 +92,10 @@ class AsignacionDocenteController extends Controller
      */
     public function quitarDocente(Grupo $grupo)
     {
-        $grupo->update(['id_docente' => null]);
-
-        return redirect()->route('admin.grupos.index')
-            ->with('success', "Docente removido del grupo {$grupo->nombre}.");
+        // No podemos poner id_docente en null porque es NOT NULL en la BD
+        // En su lugar redirigimos al formulario para asignar un nuevo docente
+        return redirect()->route('admin.grupos.asignar-docente.edit', $grupo)
+            ->with('info', "Selecciona un nuevo docente para el grupo {$grupo->nombre_grupo}.");
     }
+
 }

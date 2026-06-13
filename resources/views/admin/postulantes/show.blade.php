@@ -9,9 +9,10 @@
         <div>
             <h2 class="fw-bold mb-0">
                 <i class="bi bi-person-lines-fill me-2"></i>
-                {{ $postulante->usuario->nombre }} {{ $postulante->usuario->apellido }}
+                {{-- ✅ Los nombres están en postulante, no en usuario --}}
+                {{ $postulante->nombres }} {{ $postulante->apellido_paterno }} {{ $postulante->apellido_materno }}
             </h2>
-            <small class="text-muted">CI: {{ $postulante->usuario->ci }}</small>
+            <small class="text-muted">CI: {{ $postulante->ci }}</small>
         </div>
         <div class="d-flex gap-2">
             <a href="{{ route('admin.postulantes.edit', $postulante) }}" class="btn btn-warning">
@@ -33,15 +34,44 @@
                 <div class="card-body">
                     <dl class="row mb-0">
                         <dt class="col-5">CI:</dt>
-                        <dd class="col-7"><code>{{ $postulante->usuario->ci }}</code></dd>
-                        <dt class="col-5">Nombre:</dt>
-                        <dd class="col-7">{{ $postulante->usuario->nombre }} {{ $postulante->usuario->apellido }}</dd>
+                        <dd class="col-7"><code>{{ $postulante->ci }}</code></dd>
+
+                        <dt class="col-5">Nombres:</dt>
+                        <dd class="col-7">{{ $postulante->nombres }}</dd>
+
+                        <dt class="col-5">Apellido Paterno:</dt>
+                        <dd class="col-7">{{ $postulante->apellido_paterno }}</dd>
+
+                        <dt class="col-5">Apellido Materno:</dt>
+                        <dd class="col-7">{{ $postulante->apellido_materno }}</dd>
+
+                        <dt class="col-5">Sexo:</dt>
+                        <dd class="col-7">{{ $postulante->sexo == 'M' ? 'Masculino' : 'Femenino' }}</dd>
+
                         <dt class="col-5">Correo:</dt>
                         <dd class="col-7">{{ $postulante->correo }}</dd>
+
                         <dt class="col-5">Teléfono:</dt>
                         <dd class="col-7">{{ $postulante->telefono ?? '—' }}</dd>
+
                         <dt class="col-5">Nacimiento:</dt>
-                        <dd class="col-7">{{ \Carbon\Carbon::parse($postulante->fecha_nacimiento)->format('d/m/Y') }}</dd>
+                        <dd class="col-7">
+                            {{ \Carbon\Carbon::parse($postulante->fecha_nacimiento)->format('d/m/Y') }}
+                        </dd>
+
+                        <dt class="col-5">Ciudad:</dt>
+                        <dd class="col-7">{{ $postulante->ciudad ?? '—' }}</dd>
+
+                        <dt class="col-5">Colegio:</dt>
+                        <dd class="col-7">{{ $postulante->colegio_procedencia ?? '—' }}</dd>
+
+                        <dt class="col-5">Promedio Final:</dt>
+                        <dd class="col-7">
+                            <span class="fw-bold {{ $postulante->promedio_final >= 60 ? 'text-success' : 'text-danger' }}">
+                                {{ number_format($postulante->promedio_final, 2) }}
+                            </span>
+                        </dd>
+
                         <dt class="col-5">Estado:</dt>
                         <dd class="col-7">
                             @php
@@ -53,8 +83,13 @@
                                     default      => 'secondary',
                                 };
                             @endphp
-                            <span class="badge bg-{{ $badge }} fs-6">{{ $postulante->estado_admision }}</span>
+                            <span class="badge bg-{{ $badge }} fs-6">
+                                {{ $postulante->estado_admision }}
+                            </span>
                         </dd>
+
+                        <dt class="col-5">Usuario:</dt>
+                        <dd class="col-7"><code>{{ $postulante->usuario->usuario }}</code></dd>
                     </dl>
                 </div>
             </div>
@@ -69,18 +104,20 @@
                 <div class="card-body">
                     <div class="mb-3">
                         <span class="badge bg-primary me-2">1ª Opción</span>
-                        <strong>{{ $postulante->carrera1->nombre ?? '—' }}</strong>
+                        {{-- ✅ Relación correcta: carreraOpcion1 --}}
+                        <strong>{{ $postulante->carreraOpcion1->nombre ?? '—' }}</strong>
                     </div>
                     <div>
                         <span class="badge bg-secondary me-2">2ª Opción</span>
-                        <strong>{{ $postulante->carrera2->nombre ?? '—' }}</strong>
+                        {{-- ✅ Relación correcta: carreraOpcion2 --}}
+                        <strong>{{ $postulante->carreraOpcion2->nombre ?? '—' }}</strong>
                     </div>
                 </div>
             </div>
         </div>
 
         {{-- Grupos inscritos --}}
-        @if($postulante->inscripcionGrupos->isNotEmpty())
+        @if($postulante->grupos->isNotEmpty())
         <div class="col-12">
             <div class="card shadow-sm">
                 <div class="card-header bg-success text-white">
@@ -93,16 +130,18 @@
                                 <th>Grupo</th>
                                 <th>Materia</th>
                                 <th>Docente</th>
-                                <th>Estado</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($postulante->inscripcionGrupos as $ins)
+                            {{-- ✅ Relación correcta: grupos (belongsToMany) --}}
+                            @foreach($postulante->grupos as $grupo)
                             <tr>
-                                <td>{{ $ins->grupo->nombre ?? $ins->id_grupo }}</td>
-                                <td>{{ $ins->grupo->materia->nombre ?? '—' }}</td>
-                                <td>{{ $ins->grupo->docente->usuario->nombre ?? '—' }}</td>
-                                <td><span class="badge bg-secondary">{{ $ins->estado ?? 'Activo' }}</span></td>
+                                <td>{{ $grupo->nombre_grupo }}</td>
+                                <td>{{ $grupo->materia->nombre ?? '—' }}</td>
+                                <td>
+                                    {{ $grupo->docente->nombres ?? '—' }}
+                                    {{ $grupo->docente->apellido_paterno ?? '' }}
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -111,7 +150,7 @@
             </div>
         </div>
         @endif
-    </div>
 
+    </div>
 </div>
 @endsection
