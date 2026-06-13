@@ -15,7 +15,10 @@ return new class extends Migration
             $table->string('nombre_evaluacion', 50)->notNull();
             $table->integer('porcentaje_ponderado')->notNull();
 
-            $table->foreign('id_grupo')->references('id_grupo')->on('grupo')->onDelete('cascade');
+            $table->foreign('id_grupo')
+                  ->references('id_grupo')
+                  ->on('grupo')
+                  ->onDelete('cascade');
         });
 
         DB::statement('ALTER TABLE examen ADD CONSTRAINT chk_porcentaje CHECK (porcentaje_ponderado > 0 AND porcentaje_ponderado <= 100)');
